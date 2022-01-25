@@ -1,2 +1,6 @@
 node_modules
+<<<<<<< HEAD
+=======
+/server/mongoDB.js
+>>>>>>> bf61758... remove mongoDB file
 build
