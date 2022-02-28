@@ -13,16 +13,15 @@ const Input = ({ name, label, type, half, handleShowPassword, handleChange }) =>
             required
             fullWidth
             type={type}
-            InputProps={ name === "password" && {
-                endAdorment: (
+            InputProps={ name === "password" ? {
+                endadorment: (
                     <InputAdornment position="end">
                         <IconButton onClick={handleShowPassword} >
                             { type === "password" ? <Visibility /> : < VisibilityOff /> }
                         </IconButton>                
                     </InputAdornment>
-                )
-            }}
-
+                ),
+            } : null }
         />
     </Grid>
 );

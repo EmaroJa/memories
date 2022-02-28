@@ -4,6 +4,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 
 import postRouter from "./routes/posts.js";
+import authRouter from "./routes/user.js";
 
 const app = express();
 dotenv.config();
@@ -13,6 +14,7 @@ app.use(express.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors());
 
 app.use('/posts', postRouter);
+app.use('/auth', authRouter);
 
 app.get('/', (req, res) => {
     res.send('Welcome to memories API!');

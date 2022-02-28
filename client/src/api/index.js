@@ -1,13 +1,15 @@
 import axios from "axios";
 
-const url = "https://memories-project-ytb.herokuapp.com/posts";
+// https://memories-project-ytb.herokuapp.com/posts
+const API = axios.create({ baseURL: "http://localhost:5000" });
 
-export const fetchPosts = () => axios.get(url);
+/** POSTS */
+export const fetchPosts = () => API.get("/posts");
+export const createPost = (post) => API.post("/posts", post);
+export const updatePost = (id, updatedPost) => API.patch(`/posts/${id}`, updatedPost);
+export const deletePost = (id) => API.delete(`/posts/${id}`);
+export const likePost = (id) => API.patch(`/posts/${id}/likePost`);
 
-export const createPost = (post) => axios.post(url, post);
-
-export const updatePost = (id, updatedPost) => axios.patch(`${url}/${id}`, updatedPost);
-
-export const deletePost = (id) => axios.delete(`${url}/${id}`);
-
-export const likePost = (id) => axios.patch(`${url}/${id}/likePost`);
+/** USER */
+export const signin = (user) => API.post("/auth/signin", user);
+export const signup = (user) => API.post("/auth/signup", user);

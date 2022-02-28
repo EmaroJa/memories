@@ -7,21 +7,23 @@ import Input from "./Input";
 import Icon from "./Icon";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { signup, signin } from "../../actions/auth";
 
 const Auth =  () => {
     const classes = useStyles();
     const [isSignUp, setIsSingup] = useState(false);
-    const [user, setUser] = useState({ firstName: "", email: "", password: "" });
+    const [user, setUser] = useState({ email: "", password: ""});
     const [showPassowrd, SetShowPassowrd] = useState(false);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const handleSubmit = () => {
-
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        dispatch(isSignUp ? signup(user, navigate) : signin(user, navigate));        
     }
         
-    const handleChange = (e, name) => {
-        setUser((state) => ({ ...state, [name]: e.target.value }));
+    const handleChange = (e) => {
+        setUser(({ ...user, [e.target.name]: e.target.value }));
     }
 
     const handleShowPassword = () => SetShowPassowrd((previousState) => !previousState);
@@ -41,6 +43,16 @@ const Auth =  () => {
         console.log("Google auth has failed.. Pleas try again!");
     }
 
+    const changeMode = () => {
+        let SignupMode;
+        setIsSingup((previousIsSignUp) => {
+            SignupMode = !previousIsSignUp;
+            return !previousIsSignUp
+        });
+        if (SignupMode === "true") setUser({ firstName: "", lastName: "", email: "", password: "", confirmedPassword: "" });
+        else setUser({ email: "", password: "" });
+    }
+
     return (
         <Container component={"main"} maxWidth={"xs"}>
             <Paper className={classes.paper} elevation={3}>
@@ -52,13 +64,13 @@ const Auth =  () => {
                 <Grid container spacing={2}>
                     {  isSignUp && (
                         <>
-                            <Input name={"firstName"} type={"text"} label={"First Name"} handleChange={handleChange} autoFocus half />
-                            <Input name={"firstName"} label={"First Name"} type={"text"} handleChange={handleChange} half />
+                            <Input name={"firstName"} label={"First Name"} type={"text"} handleChange={handleChange} autoFocus half />
+                            <Input name={"lastName"} label={"Last Name"} type={"text"} handleChange={handleChange} half />
                         </>
                     )} 
                     <Input name={"email"} type={"email"} label={"email"} handleChange={handleChange} />
                     <Input name={"password"} type={showPassowrd ? "text" : "password"} label={"password"} handleChange={handleChange} handleShowPassword={handleShowPassword} />
-                    { isSignUp && <Input name={"confirmPassword"} label={"Repeat Password"} type={"password"} handleChange={handleChange}></Input>
+                    { isSignUp && <Input name={"confirmedPassword"} label={"Repeat Password"} type={"password"} handleChange={handleChange}></Input>
                     }
                 </Grid>
                 <Button className={classes.submit} type={"submit"} color={"primary"} variant={"contained"} fullWidth >
@@ -66,10 +78,10 @@ const Auth =  () => {
                         isSignUp ? "Sign Up" : "Sign In"
                     }
                 </Button>
-                <GoogleLogin 
+                <GoogleLogin
                     clientId={"342048216011-urfje3sijohh51fmef8vqhko91qvnr5e.apps.googleusercontent.com"}
                     render={(renderProps) => (
-                        <Button className={classes.googleButton} color={"primary"} variant={"contained"} disabled={renderProps.disabled}startIcon={<Icon />} fullWidth onClick={renderProps.onClick} >
+                        <Button className={classes.googleButton} color={"primary"} variant={"contained"} disabled={renderProps.disabled} startIcon={<Icon />} fullWidth onClick={renderProps.onClick} >
                             Google Sign In
                         </Button>
                     )}
@@ -77,7 +89,7 @@ const Auth =  () => {
                     onFailure={googleFailure}
                     cookiePolicy="single_host_origin"
                 />
-                <Button variant={"text"} color={"secondary"} size={"small"} fullWidth onClick={(e) => setIsSingup((previousIsSignUp) => !previousIsSignUp)} >
+                <Button variant={"text"} color={"secondary"} size={"small"} fullWidth onClick={changeMode} >
                     {
                         !isSignUp ? "Sign Up" : "Sign In"
                     }

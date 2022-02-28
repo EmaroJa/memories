@@ -15,7 +15,7 @@ const NavBar = () => {
     useEffect(() => {
         const token = user?.tokenId;
         setUser(JSON.parse(localStorage.getItem("profile")));
-    }, [location, user]);
+    }, [location]);
 
     const handleLogout = () => {
         setUser(null);
